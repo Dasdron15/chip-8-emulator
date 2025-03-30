@@ -1,7 +1,5 @@
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
-
 
 #ifdef _WIN32
 #include <SDL/SDL.>
@@ -11,7 +9,6 @@
 
 #define WIDTH 800
 #define HEIGHT 600
-#define DELAY 3000
 
 SDL_Window *window;
 
