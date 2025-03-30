@@ -1,5 +1,5 @@
-#include <SDL_events.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 
 
@@ -20,7 +20,12 @@ void cleanupSDL();
 int main(int argc, char* argv[]) {
     SDL_Window *window = NULL;
     SDL_Event event;
-    bool quit = false;
+    uint16_t quit = 0;
+
+    if (argc < 2) {
+        printf("No ROM Path Provided\n");
+        return 1;
+    }
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         fprintf(stderr, "Error: %s\n", SDL_GetError());
@@ -37,7 +42,7 @@ int main(int argc, char* argv[]) {
     while (!quit) {
         while (SDL_PollEvent(&event) != 0) {
             if (event.type == SDL_QUIT) {
-                quit = true;
+                quit = 1;
             }
         }
     }
