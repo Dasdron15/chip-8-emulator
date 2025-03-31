@@ -1,3 +1,5 @@
+#include <SDL_pixels.h>
+#include <SDL_render.h>
 #include <SDL_video.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -10,11 +12,9 @@
 #endif
 
 #define WIDTH 800
-#define HEIGHT 600
+#define HEIGHT 400
 
 int main(int argc, char* argv[]) {
-    SDL_Window *window = NULL;
-    SDL_Event event;
     uint16_t quit = 0;
 
     if (argc != 2) {
@@ -31,9 +31,21 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    window = SDL_CreateWindow("Chip-8", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow((argv[1]), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE);
 
     if (window == NULL) {
+        fprintf(stderr, "Error: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    renderer = SDL_CreateRenderer(window, -1, 0);
+    SDL_RenderSetLogicalSize(renderer, 64, 32);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 64, 32);
+
+    if (renderer == NULL) {
         fprintf(stderr, "Error: %s\n", SDL_GetError());
         return 1;
     }
