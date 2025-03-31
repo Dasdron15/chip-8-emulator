@@ -1,5 +1,7 @@
+#include <SDL_video.h>
 #include <stdint.h>
 #include <stdio.h>
+#include "chip8.h"
 
 #ifdef _WIN32
 #include <SDL/SDL.>
@@ -10,22 +12,22 @@
 #define WIDTH 800
 #define HEIGHT 600
 
-SDL_Window *window;
-
-void cleanupSDL();
-
 int main(int argc, char* argv[]) {
     SDL_Window *window = NULL;
     SDL_Event event;
     uint16_t quit = 0;
 
-    if (argc < 2) {
-        printf("No ROM Path Provided\n");
+    if (argc != 2) {
+        printf("Usage: %s <ROM>\n", argv[0]);
         return 1;
     }
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         fprintf(stderr, "Error: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    if (openROM(argv[1]) == 1) {
         return 1;
     }
 
@@ -44,12 +46,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    cleanupSDL();
+    cleanupSDL(window);
 
     return 0;
-}
-
-void cleanupSDL() {
-    SDL_DestroyWindow(window);
-    SDL_Quit();
 }
