@@ -7,6 +7,15 @@
 #include <SDL2/SDL.h>
 #endif
 
+#include <stdbool.h>
+
+SDL_Window *window;
+SDL_Renderer *renderer;
+SDL_Texture *texture;
+SDL_Event event;
+
+bool quit;
+
 int openROM(char* file) {
     unsigned char buffer[10];
     FILE *fp = fopen(file, "rb");

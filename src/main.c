@@ -12,13 +12,6 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 400
 
-bool quit = false;
-
-SDL_Window *window;
-SDL_Renderer *renderer;
-SDL_Texture *texture;
-SDL_Event event;
-
 int main(int argc, char* argv[]) {
     init();
 
@@ -61,6 +54,8 @@ int main(int argc, char* argv[]) {
     }
 
     while (!quit) {
+        cycle();
+        
         while (SDL_PollEvent(&event) != 0) {
             if (event.type == SDL_QUIT) {
                 quit = 1;
@@ -68,14 +63,6 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    for (int i = 0; i < sizeof(memory) / sizeof(memory[0]); i++) {
-        printf("%d\n", memory[i]);
-        if (memory[i] == 0) {
-            break;
-        }
-    }
-
     cleanupSDL(window, renderer, texture);
-
     return 0;
 }
