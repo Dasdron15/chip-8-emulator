@@ -77,75 +77,75 @@ void cycle() {
 
     switch (opcode & 0xF000) {
         case 0x0000:
-        switch (NN) {
-            case 0x00E0:
-            for (int i = 0; i < sizeof(graphics) / sizeof(graphics[0]); i++) {
-                graphics[i] = 0;
+            switch (NN) {
+                case 0x00E0:
+                    for (int i = 0; i < sizeof(graphics) / sizeof(graphics[0]); i++) {
+                        graphics[i] = 0;
+                    }
+                    break;
+
+                case 0x00EE:
+                    program_counter = stack[sp];
+                    --sp;
+                    break;
+
+                default:
+                    printf("Opcode error 0xxx: %x\n", opcode);
+            }
+
+        case 0x1000:
+            program_counter = NNN;
+            break;
+
+        case 0x2000:
+            stack[sp] = program_counter;
+            ++sp;
+            program_counter = NNN;
+            break;
+
+        case 0x3000:
+            if (registers[X] == NN) {
+                increment_pc();
             }
             break;
 
-            case 0x00EE:
-            program_counter = stack[sp];
-            --sp;
+        case 0x4000:
+            if (registers[X] != NN) {
+                increment_pc();
+            }
             break;
 
-            default:
-            printf("Opcode error 0xxx: %x\n", opcode);
-        }
-
-        case 0x1000:
-        program_counter = NNN;
-        break;
-
-        case 0x2000:
-        stack[sp] = program_counter;
-        ++sp;
-        program_counter = NNN;
-        break;
-
-        case 0x3000:
-        if (registers[X] == (NN)) {
-            increment_pc();
-        }
-        break;
-
-        case 0x4000:
-        if (registers[X] != (NN)) {
-            increment_pc();
-        }
-        break;
-
         case 0x5000:
-        if (registers[X] == registers[Y]) {
-            increment_pc();
-        }
-        break;
+            if (registers[X] == registers[Y]) {
+                increment_pc();
+            }
+            break;
 
         case 0x6000:
-        registers[X] = (NN);
-        break;
+            registers[X] = NN;
+            break;
 
         case 0x7000:
-        registers[X] += NN;
-        break;
+            registers[X] += NN;
+            break;
 
         case 0x8000:
             switch (N) {
                 case 0x0000:
-                registers[X] = registers[Y];
-                break;
+                    registers[X] = registers[Y];
+                    break;
 
                 case 0x0001:
-                registers[X] |= registers[Y];
-                break;
+                    registers[X] |= registers[Y];
+                    break;
 
                 case 0x0002:
-                registers[X] &= registers[Y];
-                break;
+                    registers[X] &= registers[Y];
+                    break;
 
                 case 0x0003:
-                registers[X] ^= registers[Y];
-                break;
+                    registers[X] ^= registers[Y];
+                    break;
 
             case 0x0004:
                 {
@@ -200,46 +200,46 @@ void cycle() {
                 printf("Opcode error 8xxx: %x\n", opcode);
         }
         case 0x9000:
-        if (registers[X] != registers[Y]) {
-            increment_pc();
-        }
-        break;
+            if (registers[X] != registers[Y]) {
+                increment_pc();
+            }
+            break;
 
         case 0xA000:
-        I = opcode & 0x0FFF;
-        break;
+            I = opcode & 0x0FFF;
+            break;
 
         case 0xB000:
-        program_counter = (NNN) + registers[0];
-        break;
+            program_counter = (NNN) + registers[0];
+            break;
 
         case 0xC000:
-        registers[X] = (rand() % 256) & 0x00FF;
-        break;
+            registers[X] = (rand() % 256) & 0x00FF;
+            break;
 
         case 0xD000:
-        {
-            uint8_t x = registers[(opcode & 0x0F00) >> 8];
-            uint8_t y = registers[(opcode & 0x00F0) >> 4];
-            uint8_t height = N;
-            uint8_t pixel;
+            {
+                uint8_t x = registers[(opcode & 0x0F00) >> 8];
+                uint8_t y = registers[(opcode & 0x00F0) >> 4];
+                uint8_t height = N;
+                uint8_t pixel;
 
-            registers[0xF] = 0;
-            for (int y_cord = 0; y_cord < height; y_cord++) {
-                pixel = memory[I + y_cord];
-                for (int x_cord = 0; x_cord < 8; x_cord++) {
-                    if ((pixel & (0x80 >> x_cord)) != 0) {
-                        if (graphics[(x + x_cord + ((y + y_cord) * 64))] == 1) {
-                            registers[0xF] = 1;
+                registers[0xF] = 0;
+                for (int y_cord = 0; y_cord < height; y_cord++) {
+                    pixel = memory[I + y_cord];
+                    for (int x_cord = 0; x_cord < 8; x_cord++) {
+                        if ((pixel & (0x80 >> x_cord)) != 0) {
+                            if (graphics[(x + x_cord + ((y + y_cord) * 64))] == 1) {
+                                registers[0xF] = 1;
+                            }
+                            graphics[x + x_cord + ((y + y_cord) * 64)] ^= 1;
                         }
-                        graphics[x + x_cord + ((y + y_cord) * 64)] ^= 1;
                     }
                 }
-            }
 
-            draw_flag = true;
-            break;
-        }
+                draw_flag = true;
+                break;
+            }
     }
 }
 
