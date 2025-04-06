@@ -240,6 +240,27 @@ void cycle() {
                 draw_flag = true;
                 break;
             }
+        case 0xE000:
+            switch (NN) {
+                case 0x009E:
+                    if (keys[registers[X]] != 0) {
+                        increment_pc();
+                        break;
+                    }
+                case 0x00A1:
+                    if (keys[registers[X]] == 0) {
+                        increment_pc();
+                        break;
+                    }
+            }
+        case 0xF000:
+            switch (NN) {
+                case 0x0007:
+                    registers[X] = delay_timer;
+                    break;
+                case 0x000A:
+                    
+            }
     }
 }
 
