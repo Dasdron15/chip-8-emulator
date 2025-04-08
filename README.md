@@ -2,7 +2,7 @@
 
 ## Todo
 
-- [x] Make a window
-- [ ] Code all the instructions
-- [ ] Make CPU cycle work
-- [ ] Refactor the code
+* [x] Make a window
+* [ ] Code all the instructions
+* [ ] Make CPU cycle work
+* [ ] Refactor the code
