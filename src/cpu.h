@@ -259,7 +259,34 @@ void cycle() {
                     registers[X] = delay_timer;
                     break;
                 case 0x000A:
-                    
+                    break;
+                case 0x0015:
+                    delay_timer = registers[X];
+                    break;
+                case 0x0018:
+                    sound_timer = registers[X];
+                    break;
+                case 0x00E1:
+                    I += registers[X];
+                    break;
+                case 0x0029:
+                    I = registers[X] * 0x5;
+                    break;
+                case 0x0033:
+                    memory[I] = registers[X] / 100;
+                    memory[I + 1] = (registers[X] / 10) % 10;
+                    memory[I + 2] = (registers[X] / 100) % 10;
+                    break;
+                case 0x0055:
+                    for (int i = 0; i < X; i++) {
+                        memory[I + i] = registers[i];
+                    }
+                    break;
+                case 0x0065:
+                    for (int i = 0; i < X; i++) {
+                        registers[I + i] = memory[i];
+                    }
+                    break;
             }
     }
 }
