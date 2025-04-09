@@ -259,6 +259,20 @@ void cycle() {
                     registers[X] = delay_timer;
                     break;
                 case 0x000A:
+                    bool key_pressed = false;
+
+                    for (int i = 0; i < sizeof(keys) / sizeof(keys[0]); i++) {
+                        if (keys[i] != 0) {
+                            registers[X] = i;
+                            key_pressed = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!key_pressed) {
+                        return;
+                    }
+
                     break;
                 case 0x0015:
                     delay_timer = registers[X];
