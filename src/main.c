@@ -13,8 +13,6 @@
 #define SCREEN_HEIGHT 400
 
 int main(int argc, char* argv[]) {
-    init();
-
     if (argc != 2) {
         printf("Usage: %s <ROM>\n", argv[0]);
         return 1;
@@ -53,9 +51,16 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    init();
+
     while (!quit) {
+        printf("Current opcode: 0x%X\n", opcode);
+
         cycle();
-        
+        draw();
+
+        SDL_Delay(100);
+
         while (SDL_PollEvent(&event) != 0) {
             if (event.type == SDL_QUIT) {
                 quit = 1;

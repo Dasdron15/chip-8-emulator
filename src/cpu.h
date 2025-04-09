@@ -20,6 +20,7 @@ uint8_t keys[16] = {0};
 
 uint8_t delay_timer;
 uint8_t sound_timer;
+bool draw_flag;
 
 uint8_t chip8Font[80] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -40,15 +41,12 @@ uint8_t chip8Font[80] = {
     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-uint_fast8_t draw_flag;
 
 void init() {
     srand(time(0));
-
     program_counter = 0x200;
     opcode = 0;
     I = 0;
-    program_counter = 0;
     delay_timer = 0;
     sound_timer = 0;
     sp = 0;
@@ -64,7 +62,9 @@ void increment_pc() {
 }
 
 void cycle() {
-    opcode = memory[program_counter] << 8 | memory[program_counter + 1];
+    opcode = (memory[program_counter] << 8) | memory[program_counter + 1];
+
+    // printf("Current opcode: 0x%04X\n", opcode);
 
     uint8_t NNN = opcode & 0x0FFF;
     uint8_t NN = opcode & 0x00FF;
@@ -88,10 +88,8 @@ void cycle() {
                     program_counter = stack[sp];
                     --sp;
                     break;
-
-                default:
-                    printf("Opcode error 0xxx: %x\n", opcode);
             }
+            break;
 
         case 0x1000:
             program_counter = NNN;
@@ -259,6 +257,7 @@ void cycle() {
                     registers[X] = delay_timer;
                     break;
                 case 0x000A:
+                {
                     bool key_pressed = false;
 
                     for (int i = 0; i < sizeof(keys) / sizeof(keys[0]); i++) {
@@ -274,6 +273,7 @@ void cycle() {
                     }
 
                     break;
+                }
                 case 0x0015:
                     delay_timer = registers[X];
                     break;
